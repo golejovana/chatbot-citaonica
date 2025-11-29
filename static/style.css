@@ -1,0 +1,82 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f3f7;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    margin: 40px auto;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px 24px 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#chat-window {
+    border-radius: 12px;
+    height: 420px;
+    padding: 16px;
+    overflow-y: auto;
+    background: #f7f8fc;
+    border: 1px solid #e2e4f0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* zajednički stil poruke */
+.message {
+    max-width: 70%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* korisnik desno, plavo */
+.message.user {
+    margin-left: auto;
+    background: #cfe3ff;
+    color: #12305a;
+    border-bottom-right-radius: 6px;
+}
+
+/* bot levo, sivo */
+.message.bot {
+    margin-right: auto;
+    background: #e6e7eb;
+    color: #20232a;
+    border-bottom-left-radius: 6px;
+}
+
+form {
+    display: flex;
+    margin-top: 12px;
+    gap: 8px;
+}
+
+#user-input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #c5c7d4;
+    font-size: 14px;
+}
+
+button {
+    padding: 0 16px;
+    border: none;
+    border-radius: 8px;
+    background: #5a8dff;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}

@@ -2,9 +2,27 @@
 <html lang="sr">
 <head>
     <meta charset="UTF-8">
-    <title>Chatbot</title>
+    <title>Moj chatbot</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>Dobrodošla u moj chatbot projekat</h1>
+
+<div class="container">
+    <h1>Moj chatbot</h1>
+
+    <div id="chat-window"></div>
+
+    <form id="chat-form">
+        <input
+            id="user-input"
+            type="text"
+            placeholder="Postavi pitanje..."
+            autocomplete="off"
+        >
+        <button type="submit">Pošalji</button>
+    </form>
+</div>
+
+<script src="/static/script.js"></script>
 </body>
 </html>
