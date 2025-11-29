@@ -1,3 +1,26 @@
+function renderSuggestions(suggestions) {
+    const container = document.getElementById("suggestions");
+    container.innerHTML = "";
+
+    if (!suggestions || suggestions.length === 0) return;
+
+    suggestions.forEach(q => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "suggestion-btn";
+        btn.textContent = q;
+
+        btn.addEventListener("click", () => {
+            const input = document.getElementById("user-input");
+            input.value = q;
+            sendMessage();
+        });
+
+        container.appendChild(btn);
+    });
+}
+
+
 async function sendMessage() {
     const input = document.getElementById("user-input");
     const chat = document.getElementById("chat-window");
@@ -46,6 +69,10 @@ async function sendMessage() {
         botMsg.textContent = data.answer;
         chat.appendChild(botMsg);
         chat.scrollTop = chat.scrollHeight;
+
+        //predlozena pitanja
+        renderSuggestions(data.suggestions);
+
     } catch (err) {
         typingBubble.remove();
         const errorMsg = document.createElement("div");

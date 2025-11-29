@@ -121,3 +121,31 @@ button {
     20% { opacity: 1; }
     100% { opacity: .2; }
 }
+
+/* ----- Predložena pitanja ----- */
+
+#suggestions {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.suggestion-btn {
+    border: 1px solid #c5c7d4;
+    background: #f0f2ff;
+    color: #1f2954;
+    border-radius: 16px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.05s ease;
+}
+
+.suggestion-btn:hover {
+    background: #dbe2ff;
+}
+
+.suggestion-btn:active {
+    transform: scale(0.97);
+}

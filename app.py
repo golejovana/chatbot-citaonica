@@ -105,6 +105,10 @@ FAQ = [
 # ------------------------
 # POMOĆNE FUNKCIJE
 # ------------------------
+def get_suggestions(limit=4):
+    """Vraća listu predloženih pitanja (naslova iz FAQ)."""
+    return [item["question"] for item in FAQ[:limit]]
+
 
 def normalize(text: str) -> str:
     """Normalizuje tekst: mala slova + uklanja specijalne znakove."""
@@ -160,8 +164,13 @@ def api_message():
     user_message = data.get("message", "")
 
     reply = find_answer(user_message)
+    suggestions = get_suggestions()  # za sada uvek ista 3–4 pitanja
 
-    return jsonify({"answer": reply})
+    return jsonify({
+        "answer": reply,
+        "suggestions": suggestions
+    })
+
 
 
 if __name__ == "__main__":
