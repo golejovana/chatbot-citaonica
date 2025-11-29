@@ -1,151 +1,247 @@
-body {
-    font-family: Arial, sans-serif;
-    background: #f2f3f7;
-    margin: 0;
-    padding: 0;
+/* ------- Global ------- */
+
+* {
+    box-sizing: border-box;
 }
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: radial-gradient(circle at top, #eef1ff 0, #dde4ff 30%, #f7f8ff 70%, #ffffff 100%);
+    margin: 0;
+    padding: 40px 0;
+    color: #1b2559;
+}
+
+/* ------- Card / Layout ------- */
 
 .container {
     width: 100%;
-    max-width: 900px;
-    margin: 40px auto;
+    max-width: 960px;
+    margin: 0 auto;
     background: #ffffff;
-    border-radius: 16px;
-    padding: 24px 24px 16px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    border-radius: 28px;
+    padding: 24px 28px 18px;
+    box-shadow:
+        0 22px 60px rgba(15, 23, 42, 0.12),
+        0 0 0 1px rgba(148, 163, 184, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
+
+/* ------- Header ------- */
 
 h1 {
     text-align: center;
-    margin-bottom: 20px;
+    margin: 0 0 6px;
+    font-size: 28px;
+    letter-spacing: 0.04em;
 }
+
+h1::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 3px;
+    border-radius: 999px;
+    margin: 8px auto 0;
+    background: linear-gradient(90deg, #4f46e5, #6366f1, #a855f7);
+}
+
+/* ------- Chat window ------- */
 
 #chat-window {
-    border-radius: 12px;
-    height: 420px;
-    padding: 16px;
+    border-radius: 22px;
+    height: 430px;
+    padding: 18px 18px 14px;
     overflow-y: auto;
-    background: #f7f8fc;
-    border: 1px solid #e2e4f0;
+    background: linear-gradient(135deg, #f4f6ff, #f9f9ff);
+    border: 1px solid rgba(148, 163, 184, 0.35);
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
 }
 
-/* poruke */
+/* mali fade pri ulazu poruke */
 .message {
-    max-width: 70%;
+    max-width: 72%;
     padding: 10px 14px;
-    border-radius: 16px;
+    border-radius: 18px;
     font-size: 14px;
-    line-height: 1.4;
+    line-height: 1.45;
+    animation: fadeIn 0.18s ease-out;
 }
 
 .message.user {
     margin-left: auto;
-    background: #cfe3ff;
-    color: #12305a;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: #eef2ff;
     border-bottom-right-radius: 6px;
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.38);
 }
 
 .message.bot {
     margin-right: auto;
-    background: #e6e7eb;
-    color: #20232a;
+    background: #eef1ff;
+    color: #111827;
     border-bottom-left-radius: 6px;
+    border: 1px solid rgba(148, 163, 184, 0.55);
 }
 
-/* forma */
-form {
-    display: flex;
-    margin-top: 12px;
-    gap: 8px;
-}
-
-#user-input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #c5c7d4;
-    font-size: 14px;
-}
-
-button {
-    padding: 0 16px;
-    border: none;
-    border-radius: 8px;
-    background: #5a8dff;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-/* ---------- TYPING MEHURIĆ ---------- */
+/* ------- Typing bubble ------- */
 
 .typing {
     align-self: flex-start;
-    max-width: 70%;
-    padding: 10px 14px;
-    background: #e6e7eb;
+    max-width: 50%;
+    padding: 9px 12px;
+    background: #eef1ff;
     color: #555;
-    border-radius: 16px;
+    border-radius: 18px;
     border-bottom-left-radius: 6px;
-    font-size: 14px;
-    margin-bottom: 6px;
+    font-size: 13px;
+    margin-bottom: 4px;
+    border: 1px solid rgba(148, 163, 184, 0.4);
 }
 
 .dots {
     display: inline-flex;
-    gap: 4px;
+    gap: 5px;
 }
 
 .dots span {
     display: inline-block;
     width: 6px;
     height: 6px;
-    background: #555;
-    border-radius: 50%;
+    background: #6b7280;
+    border-radius: 999px;
     animation: blink 1.4s infinite both;
 }
 
 .dots span:nth-child(2) {
     animation-delay: 0.2s;
 }
-
 .dots span:nth-child(3) {
     animation-delay: 0.4s;
 }
 
-@keyframes blink {
-    0% { opacity: .2; }
-    20% { opacity: 1; }
-    100% { opacity: .2; }
-}
-
-/* ----- Predložena pitanja ----- */
+/* ------- Suggestions ------- */
 
 #suggestions {
-    margin-top: 10px;
+    margin-top: 2px;
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
 }
 
 .suggestion-btn {
-    border: 1px solid #c5c7d4;
-    background: #f0f2ff;
-    color: #1f2954;
-    border-radius: 16px;
-    padding: 6px 12px;
-    font-size: 13px;
+    border: 1px solid rgba(148, 163, 184, 0.7);
+    background: rgba(239, 246, 255, 0.9);
+    color: #1f2937;
+    border-radius: 999px;
+    padding: 6px 13px;
+    font-size: 12px;
     cursor: pointer;
-    transition: background 0.15s ease, transform 0.05s ease;
+    transition:
+        background 0.15s ease,
+        transform 0.05s ease,
+        box-shadow 0.12s ease;
+    white-space: nowrap;
 }
 
 .suggestion-btn:hover {
-    background: #dbe2ff;
+    background: #e0e7ff;
+    box-shadow: 0 3px 10px rgba(148, 163, 184, 0.5);
 }
 
 .suggestion-btn:active {
-    transform: scale(0.97);
+    transform: translateY(1px) scale(0.98);
+}
+
+/* ------- Input form ------- */
+
+form {
+    display: flex;
+    margin-top: 6px;
+    gap: 10px;
+}
+
+#user-input {
+    flex: 1;
+    padding: 11px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.9);
+    font-size: 14px;
+    outline: none;
+    transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    background: #f9fafb;
+}
+
+#user-input:focus {
+    border-color: #6366f1;
+    background: #ffffff;
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.35),
+                0 10px 20px rgba(148, 163, 184, 0.35);
+}
+
+button {
+    padding: 0 18px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #4f46e5, #6366f1, #7c3aed);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.45);
+    transition: transform 0.06s ease, box-shadow 0.12s ease, filter 0.12s ease;
+}
+
+button:hover {
+    filter: brightness(1.05);
+    box-shadow: 0 10px 22px rgba(79, 70, 229, 0.6);
+}
+
+button:active {
+    transform: translateY(1px) scale(0.98);
+    box-shadow: 0 5px 12px rgba(79, 70, 229, 0.5);
+}
+
+/* ------- Animacije ------- */
+
+@keyframes blink {
+    0% { opacity: .25; }
+    20% { opacity: 1; }
+    100% { opacity: .25; }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ------- Responsive ------- */
+
+@media (max-width: 768px) {
+    body {
+        padding: 16px 8px;
+    }
+
+    .container {
+        padding: 18px 16px 14px;
+        border-radius: 18px;
+    }
+
+    #chat-window {
+        height: 420px;
+    }
+
+    .message {
+        max-width: 82%;
+    }
 }
