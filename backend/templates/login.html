@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <title>Prijava</title>
+    <link rel="stylesheet" href="/static/login.css">
+</head>
+<body>
+<!-- {% include "navbar.html" %} -->
+<div class="auth-card">
+    <h2>Prijava</h2>
+
+    <input id="email" class="auth-input" type="email" placeholder="Email">
+    <input id="password" class="auth-input" type="password" placeholder="Lozinka">
+
+    <button class="auth-btn" onclick="login()">Prijavi se</button>
+
+    <a href="/register" class="auth-link">Nemaš nalog? Registruj se</a>
+
+    <div id="login-msg"></div>
+</div>
+
+<script>
+async function login() {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+    const msg = document.getElementById("login-msg");
+
+    msg.textContent = data.message;
+
+    if (data.success) {
+        msg.style.color = "green";
+        setTimeout(() => window.location.href = "/", 1100);
+    } else {
+        msg.style.color = "red";
+    }
+}
+</script>
+
+</body>
+</html>

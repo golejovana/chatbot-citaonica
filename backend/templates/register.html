@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <title>Registracija</title>
+    <link rel="stylesheet" href="/static/register.css">
+</head>
+<body>
+<!-- {% include "navbar.html" %} -->
+<div class="auth-card">
+    <h2>Registracija</h2>
+
+    <input id="name" class="auth-input" type="text" placeholder="Ime i prezime">
+    <input id="email" class="auth-input" type="email" placeholder="Email">
+    <input id="password" class="auth-input" type="password" placeholder="Lozinka">
+
+    <button class="auth-btn" onclick="register()">Registruj se</button>
+
+    <a href="/login" class="auth-link">Već imaš nalog? Prijavi se</a>
+
+    <div id="reg-msg"></div>
+</div>
+
+<script>
+async function register() {
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password })
+    });
+
+    const data = await res.json();
+    const msg = document.getElementById("reg-msg");
+
+    msg.textContent = data.message;
+
+    if (data.success) {
+        msg.style.color = "green";
+        setTimeout(() => window.location.href = "/login", 1200);
+    } else {
+        msg.style.color = "red";
+    }
+}
+</script>
+
+</body>
+</html>

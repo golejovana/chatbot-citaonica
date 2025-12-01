@@ -1,0 +1,109 @@
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="/" class="brand">Čitaonica</a>
+    </div>
+
+    <div class="nav-right">
+        <button id="theme-toggle" class="theme-btn">🌙</button>
+
+        {% if session.user_id %}
+
+            <span class="nav-hello">Zdravo, {{ session.user_name }}!</span>
+            <a class="nav-link" href="/profile">Profil</a>
+            <a class="nav-link logout" href="/logout">Logout</a>
+
+        {% else %}
+
+            <a class="nav-link" href="/login">Prijava</a>
+            <a class="nav-link" href="/register">Registracija</a>
+
+        {% endif %}
+    </div>
+</nav>
+
+<style>
+.navbar {
+    width: 100%;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.brand {
+    font-size: 22px;
+    font-weight: 700;
+    color: #4f46e5;
+    text-decoration: none;
+}
+
+.nav-right {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #374151;
+    font-size: 15px;
+    font-weight: 500;
+    transition: .15s;
+}
+
+.nav-link:hover {
+    color: #4f46e5;
+}
+
+.nav-hello {
+    font-size: 15px;
+    color: #6b7280;
+}
+
+.logout {
+    color: #dc2626;
+}
+.logout:hover {
+    color: #b91c1c;
+}
+.theme-btn {
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.theme-btn:hover {
+    opacity: 0.7;
+}
+
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const toggle = document.getElementById("theme-toggle");
+
+    // Ako postoji tema u localStorage
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+        document.documentElement.setAttribute("data-theme", savedTheme);
+        toggle.textContent = savedTheme === "dark" ? "☀️" : "🌙";
+    }
+
+    // Klik na dugme
+    toggle.addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme");
+        const next = current === "dark" ? "light" : "dark";
+
+        document.documentElement.setAttribute("data-theme", next);
+        localStorage.setItem("theme", next);
+
+        toggle.textContent = next === "dark" ? "☀️" : "🌙";
+    });
+});
+</script>
