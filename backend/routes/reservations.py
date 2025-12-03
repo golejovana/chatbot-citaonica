@@ -9,9 +9,10 @@ reservations_bp = Blueprint("reservations_bp", __name__)
 def reserve_seat_route():
     user_id = session["user_id"]
     data = request.get_json()
-    seat_number = data.get("seat_number")
 
-    success, message = reserve_seat(user_id, seat_number)
+    seat_number = data.get("seat_number")
+    date = data.get("date")  # yyyy-mm-dd
+
+    success, message = reserve_seat(user_id, seat_number, date)
 
     return jsonify({"success": success, "message": message})
-

@@ -1,82 +1,77 @@
-from db import cursor, db
+from db import get_db_connection
 from datetime import datetime
 
-def cancel_reservation(user_id, seat_number=None):
+def reserve_seat(user_id: int, seat_number: int, date):
     """
-    Otkazuje rezervaciju korisnika.
-    Ako seat_number nije prosleđen → otkazuje njegovu AKTIVNU rezervaciju.
+    Rezerviše mesto po datumu.
     """
 
-    # 1. Pronađi aktivnu rezervaciju korisnika
-    if seat_number:
-        cursor.execute(
-            "SELECT * FROM reservations WHERE user_id = %s AND seat_number = %s AND status = 'active'",
-            (user_id, seat_number)
-        )
-    else:
-        cursor.execute(
-            "SELECT * FROM reservations WHERE user_id = %s AND status = 'active'",
-            (user_id,)
-        )
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
 
-    reservation = cursor.fetchone()
-    if not reservation:
-        return False, "Nemaš aktivnu rezervaciju koju možeš otkazati."
+    # 1. Da li mesto postoji
+    cursor.execute("SELECT id FROM seats WHERE seat_number = %s", (seat_number,))
+    seat = cursor.fetchone()
+    if not seat:
+        return False, "To mesto ne postoji."
 
-    seat_number = reservation["seat_number"]
+    # 2. Da li je već rezervisano za taj dan
+    cursor.execute("""
+        SELECT id FROM reservations
+        WHERE seat_number = %s AND date = %s AND status = 'active'
+    """, (seat_number, date))
+    taken = cursor.fetchone()
 
-    # 2. Oslobodi mesto u tabeli seats
-    cursor.execute(
-        "UPDATE seats SET is_reserved = 0 WHERE seat_number = %s",
-        (seat_number,)
-    )
+    if taken:
+        return False, "To mesto je već rezervisano za taj datum."
 
-    # 3. Obeleži rezervaciju kao otkazanu
-    cursor.execute(
-        "UPDATE reservations SET status = 'cancelled' WHERE id = %s",
-        (reservation["id"],)
-    )
+    # 3. Da li korisnik već ima rezervaciju za taj dan
+    cursor.execute("""
+        SELECT id FROM reservations
+        WHERE user_id = %s AND date = %s AND status = 'active'
+    """, (user_id, date))
+    existing = cursor.fetchone()
+
+    if existing:
+        return False, "Već imaš rezervisano mesto za taj dan."
+
+    # 4. Upis rezervacije
+    cursor.execute("""
+        INSERT INTO reservations (user_id, seat_number, date, status)
+        VALUES (%s, %s, %s, 'active')
+    """, (user_id, seat_number, date))
 
     db.commit()
+    db.close()
 
-    return True, f"Rezervacija mesta broj {seat_number} je uspešno otkazana. 😊"
-
-def reserve_seat(user_id: int, seat_number: int):
-    try:
-        # 1. Da li mesto postoji uopšte
-        cursor.execute("SELECT id, is_reserved FROM seats WHERE seat_number = %s", (seat_number,))
-        seat = cursor.fetchone()
-
-        if not seat:
-            return False, "To mesto ne postoji."
-
-        if seat["is_reserved"] == 1:
-            return False, "To mesto je već rezervisano."
-
-        # 2. Da li korisnik već ima rezervaciju
-        cursor.execute("SELECT id FROM reservations WHERE user_id = %s", (user_id,))
-        existing = cursor.fetchone()
-
-        if existing:
-            return False, "Već imaš rezervisano mesto."
-
-        # 3. Rezerviši mesto
-        cursor.execute(
-    "INSERT INTO reservations (user_id, seat_number, date, status) VALUES (%s, %s, %s, %s)",
-    (user_id, seat_number, datetime.now().date(), "active")
-)
+    return True, f"Uspešno si rezervisao mesto {seat_number} za datum {date} 😊"
 
 
-        cursor.execute(
-            "UPDATE seats SET is_reserved = 1 WHERE seat_number = %s",
-            (seat_number,),
-        )
+def cancel_reservation(user_id, seat_number, date):
+    """
+    Otkazuje rezervaciju (menja status).
+    """
 
-        db.commit()
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
 
-        return True, f"Uspešno si rezervisao mesto broj {seat_number}! 📚"
+    cursor.execute("""
+        SELECT id FROM reservations
+        WHERE user_id = %s AND seat_number = %s AND date = %s AND status = 'active'
+    """, (user_id, seat_number, date))
+    
+    reservation = cursor.fetchone()
 
-    except Exception as e:
-        print("GRESKA U REZERVACIJI:", e)
-        db.rollback()
-        return False, "Došlo je do greške prilikom rezervacije."
+    if not reservation:
+        return False, "Nemaš aktivnu rezervaciju za zadati datum."
+
+    cursor.execute("""
+        UPDATE reservations
+        SET status = 'cancelled'
+        WHERE id = %s
+    """, (reservation["id"],))
+
+    db.commit()
+    db.close()
+
+    return True, f"Rezervacija mesta {seat_number} za datum {date} je otkazana."

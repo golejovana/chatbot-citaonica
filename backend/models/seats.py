@@ -1,35 +1,23 @@
 from db import get_db_connection
 
-def get_free_seats():
+def get_free_seats(date):
+    """
+    Vraća sva slobodna mesta za dati datum.
+    """
     db = get_db_connection()
-    cursor = db.cursor()
-    cursor.execute("SELECT free_seats FROM reading_room_status WHERE id = 1")
-    result = cursor.fetchone()
-    db.close()
-    return result[0]
-
-
-def decrease_free_seats():
-    db = get_db_connection()
-    cursor = db.cursor()
+    cursor = db.cursor(dictionary=True)
 
     cursor.execute("""
-        UPDATE reading_room_status
-        SET free_seats = free_seats - 1
-        WHERE id = 1 AND free_seats > 0
-    """)
-    db.commit()
+        SELECT seat_number 
+        FROM seats
+        WHERE seat_number NOT IN (
+            SELECT seat_number FROM reservations
+            WHERE date = %s AND status = 'active'
+        )
+        ORDER BY seat_number ASC
+    """, (date,))
+
+    result = cursor.fetchall()
     db.close()
 
-
-def increase_free_seats():
-    db = get_db_connection()
-    cursor = db.cursor()
-
-    cursor.execute("""
-        UPDATE reading_room_status
-        SET free_seats = free_seats + 1
-        WHERE id = 1
-    """)
-    db.commit()
-    db.close()
+    return [row["seat_number"] for row in result]
